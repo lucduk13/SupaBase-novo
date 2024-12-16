@@ -1,6 +1,6 @@
 import { Router, Route } from "@solidjs/router";
-import { AuthProvider } from "./components/AuthProvider";
-import { A } from "@solidjs/router";
+import { AuthProvider, useAuth } from "./components/AuthProvider";
+import { Show } from "solid-js";
 
 import Home from "./pages/Home";
 import SignIn from "./pages/SignIn";
@@ -20,18 +20,23 @@ export default function App() {
 
 function Layout(props) {
   const appName = import.meta.env.VITE_APP_NAME;
+  const session = useAuth();
 
   return (
     <div class="p-4 flex flex-col gap-4">
 
-      <div>
-        <div class="text-4xl text-neutral-500 uppercase">
+      <div class="flex flex-wrap align-top items-start gap-2">
+        <div class="text-3xl text-neutral-500 uppercase">
           {appName}
         </div>
-        <div class="flex gap-2">
+        <div class="flex-none flex-wrap flex gap-2">
           <A href="/" class="bg-orange-400 p-2 rounded hover:bg-red-300">Naslovnica</A>
+          <Show when={!session()}>
           <A href="/signin" class="bg-orange-400 p-2 rounded hover:bg-red-300">Prijava</A>
+          </Show>
+          <Show when={session()}>
           <A href="/signout" class="bg-orange-400 p-2 rounded hover:bg-red-300">Odjava</A>
+          </Show>
         </div>
       </div>
 
@@ -40,7 +45,7 @@ function Layout(props) {
       </div>
 
       <div class="text-center text-xs text-neutral-500">
-        Sva prava pridržana {new Date().getFullYear()}. Pero i sinovi
+        Sva prava pridržana {new Date().getFullYear()}. Obrtnička škola Koprivnica
       </div>
     </div>
   );
